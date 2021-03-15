@@ -12,12 +12,23 @@
     margin-top: 40px;
 }
 
-.tbl_date_row {
-    background-color: lightgray;
-    padding: 5px;
-}
-
 .location_div {
     display: inline-block;
+    text-align: center;
     padding: 5px;
+    margin-bottom: 40px; 
+    width: 200px;
   }
+
+.sort-btn {
+    margin-bottom: 10px; 
+  }
+
+.span_show {
+    font-size:70%;
+    overflow-wrap: break-word;
+}
+
+.span_hide {
+    display:none;
+}

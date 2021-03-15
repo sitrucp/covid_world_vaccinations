@@ -3,11 +3,11 @@ var $grid = '';
 var file_update_time = "https://raw.githubusercontent.com/owid/COVID-19-data/master/public/data/owid-covid-data-last-updated-timestamp.txt";
 var file_vaccinations = "https://raw.githubusercontent.com/owid/COVID-19-data/master/public/data/vaccinations/vaccinations.csv";
 var file_locations = "https://raw.githubusercontent.com/owid/COVID-19-data/master/public/data/vaccinations/locations.csv";
-//var file_population = "https://raw.githubusercontent.com/owid/COVID-19-data/master/scripts/input/un/population_2020.csv";
+var file_population = "https://raw.githubusercontent.com/owid/COVID-19-data/master/scripts/input/un/population_2020.csv";
 
 // get files from my github repository
 var file_vaccine_group = "vaccine_groups.csv";
-var file_population = "population.csv";
+//var file_population = "population.csv";
 
 // define color variables 
 var clrBlue = 'rgba(49,130,189,.9)';
@@ -91,7 +91,7 @@ Promise.all([
     // left join arrPopulation to arrLocations
     const arrLocationPop = equijoinWithDefault(
         arrLocations, arrPopulation, 
-        "location", "country", 
+        "location", "entity", 
         ({location, vaccines, owid_vaccine_alt, vaccine_group, last_observation_date}, {population}, ) => 
         ({location, vaccines, owid_vaccine_alt, vaccine_group, last_observation_date, population}), 
         {population:null});
@@ -100,8 +100,8 @@ Promise.all([
     const arrVacDetailLoc = equijoinWithDefault(
         arrVacDetail, arrLocationPop, 
         "location", "location", 
-        ({location, iso_code, date, date_sort, total_vaccinations, total_vaccinations_filled, people_vaccinated, people_fully_vaccinated, daily_vaccinations_raw, daily_vaccinations, total_vaccinations_per_hundred, total_vaccinations_per_hundred_filled, people_vaccinated_per_hundred, people_fully_vaccinated_per_hundred, daily_vaccinations_per_million, daily_vaccinations_per_hundred, source}, {vaccines, last_observation_date, owid_vaccine_alt, vaccine_group, population}, ) => 
-        ({location, iso_code, date, date_sort, total_vaccinations, total_vaccinations_filled, people_vaccinated, people_fully_vaccinated, daily_vaccinations_raw, daily_vaccinations, total_vaccinations_per_hundred, total_vaccinations_per_hundred_filled, people_vaccinated_per_hundred, people_fully_vaccinated_per_hundred, daily_vaccinations_per_million, daily_vaccinations_per_hundred, vaccines, last_observation_date, owid_vaccine_alt, vaccine_group, population, source}), 
+        ({concatLocDate, location, iso_code, date, date_sort, total_vaccinations, total_vaccinations_filled, people_vaccinated, people_fully_vaccinated, daily_vaccinations_raw, daily_vaccinations, total_vaccinations_per_hundred, total_vaccinations_per_hundred_filled, people_vaccinated_per_hundred, people_fully_vaccinated_per_hundred, daily_vaccinations_per_million, daily_vaccinations_per_hundred, source}, {vaccines, last_observation_date, owid_vaccine_alt, vaccine_group, population}, ) => 
+        ({concatLocDate, location, iso_code, date, date_sort, total_vaccinations, total_vaccinations_filled, people_vaccinated, people_fully_vaccinated, daily_vaccinations_raw, daily_vaccinations, total_vaccinations_per_hundred, total_vaccinations_per_hundred_filled, people_vaccinated_per_hundred, people_fully_vaccinated_per_hundred, daily_vaccinations_per_million, daily_vaccinations_per_hundred, vaccines, last_observation_date, owid_vaccine_alt, vaccine_group, population, source}), 
         {population: null});
 
     // filter vaccinations dataset by location max date to get current records only
@@ -235,14 +235,17 @@ Promise.all([
 
         // create arrCountryRank
         // loop through arrVacDates desc, get max date per country, that is less than loop date
-        // assign max date less than loop date as country's last report date
+        // assign that max date as country's last report date 
         for (var i=0; i<arrVacDates.length; i++) {
+
             var loopDate = arrVacDates[i];
+
             // filter arrVacDetailLoc to dates less than loop date
             var arrVacLoopDate = arrVacDetailLoc.filter(function(d) { 
                 return d.date <= loopDate;
             });
-            // summarize location by country's last date reported <= loopDate
+
+            // summarize location by country's last report date
             var arrVacLoopDateMax = d3.nest()
             .key(function(d) { 
                 return d.location; 
@@ -262,41 +265,40 @@ Promise.all([
                 }
             });
 
-            // create concat arrVacLoopDate location and date to join arrays
-            arrVacLoopDate.forEach(function(d) {
-                d.concatLocDate = d.location + d.date;
-            });
-
-            // create concat arrVacLoopDateMax location and date to join arrays
+            // create arrVacLoopDateMax concat location and date to join arrays
             arrVacLoopDateMax.forEach(function(d) {
                 d.concatLocDate = d.location + d.max_loop_date;
             });
+
+            // join arrVacLoopDateMax to arrVacLoopDate to get all data back
+            const arrVacLoopDateMaxFull = equijoinWithDefault(
+                arrVacLoopDateMax, arrVacLoopDate, 
+                "concatLocDate", "concatLocDate", 
+                ({max_loop_date}, {concatLocDate, daily_vaccinations, daily_vaccinations_per_hundred, daily_vaccinations_per_million, daily_vaccinations_raw, date, date_sort, iso_code, last_observation_date, location, owid_vaccine_alt, people_fully_vaccinated, people_fully_vaccinated_per_hundred, people_vaccinated, people_vaccinated_per_hundred, population, source, total_vaccinations, total_vaccinations_filled, total_vaccinations_per_hundred, total_vaccinations_per_hundred_filled, vaccine_group, vaccines}, ) => 
+                ({max_loop_date, concatLocDate, daily_vaccinations, daily_vaccinations_per_hundred, daily_vaccinations_per_million, daily_vaccinations_raw, date, date_sort, iso_code, last_observation_date, location, owid_vaccine_alt, people_fully_vaccinated, people_fully_vaccinated_per_hundred, people_vaccinated, people_vaccinated_per_hundred, population, source, total_vaccinations, total_vaccinations_filled, total_vaccinations_per_hundred, total_vaccinations_per_hundred_filled, vaccine_group, vaccines}), 
+                {population: null});
             
-            // join arrVacLoopDateMax and arrVacLoopDate on concat location and date to get  total_vaccinations_per_hundred value from arrVacLoopDate for loop date
-            arrVacLoopDateMax.forEach(function(d) {
-                d.total_vaccinations_per_hundred_filled = arrVacLoopDate.find(x => x.concatLocDate === d.concatLocDate).total_vaccinations_per_hundred_filled;
-                d.total_vaccinations_filled = arrVacLoopDate.find(x => x.concatLocDate === d.concatLocDate).total_vaccinations_filled;
-            });
-            
-            // order arrVacLoopDateMax desc by total_vaccinations_per_hundred to get rank
-            arrVacLoopDateMax.sort((a, b) => {
+            // order arrVacLoopDateMaxFull desc by total_vaccinations_per_hundred to get rank
+            arrVacLoopDateMaxFull.sort((a, b) => {
                 return b.total_vaccinations_per_hundred_filled - a.total_vaccinations_per_hundred_filled;
             });
 
             // define loop country count
-            vCountryCount = arrVacLoopDateMax.length;
+            vCountryCount = arrVacLoopDateMaxFull.length;
             
             // create arrCountryRank
-            for (var j=0; j < arrVacLoopDateMax.length; j++) {
-                tableRow = arrVacLoopDateMax[j];
-                vLocation = tableRow.location;
-                vRank = (parseInt(j) + 1);
-                vPer100 = parseFloat(tableRow.total_vaccinations_per_hundred_filled).toFixed(2);
-                vTotalVax = parseInt(tableRow.total_vaccinations_filled).toLocaleString();;
-                vRankPctile = getRankPctile(vRank, vCountryCount);
-                vSortDate = tableRow.max_loop_date_sort;
-                // push elements to array
-                arrCountryRank.push({date: loopDate, date_sort: vSortDate, location: vLocation, country_count: vCountryCount, rank: vRank, total_vaccinations_per100: vPer100, rank_percentile: vRankPctile, total_vaccinations: vTotalVax});
+            for (var j=0; j < arrVacLoopDateMaxFull.length; j++) {
+                row = arrVacLoopDateMaxFull[j];
+                // push elements to arrCountryRank
+                arrCountryRank.push({
+                    date: loopDate, 
+                    date_sort: row.max_loop_date_sort, 
+                    location: row.location,  
+                    total_vaccinations: parseInt(row.total_vaccinations_filled).toLocaleString(),
+                    total_vaccinations_per100: parseFloat(row.total_vaccinations_per_hundred_filled).toFixed(2), 
+                    rank: (parseInt(j) + 1),
+                    rank_percentile: getRankPctile((parseInt(j) + 1), vCountryCount)
+                });
             }
         }
 
@@ -316,6 +318,8 @@ Promise.all([
                 '<li class="list-inline-item btn btn-primary btn-sm sort-btn" data-sort-by="rank" >Rank</li>' +
                 '<li class="list-inline-item btn btn-primary btn-sm sort-btn" data-sort-by="slope">Change</li>' +
                 '<li class="list-inline-item btn btn-primary btn-sm sort-btn" data-sort-by="min_date" >Date</li>' +
+                '<li class="list-inline-item btn btn-primary btn-sm sort-btn" data-sort-by="total_vaccinations">Doses</li>' +
+                '<li class="list-inline-item btn btn-primary btn-sm sort-btn" data-sort-by="population">Population</li>' +
             '</ul>';
         divTitle.innerHTML = chartTitle;
         divDesc.innerHTML = chartDesc;
@@ -329,10 +333,9 @@ Promise.all([
         var arrRanklocations = [...new Set(arrCountryRank.map(item => item.location))];
         arrRanklocations.sort((a, b) => a.localeCompare(b));
 
-        // loop through locations to create chart for each
+        // loop to create each location chart
         for (var i=0; i < arrRanklocations.length; i++) {
 
-            var currentRank = arrVacDetailLocCurrent.findIndex(x => x.location === arrRanklocations[i]) + 1;
             var xDate = [];
             var xDateSort = [];
             var xDateDays = [];
@@ -342,8 +345,14 @@ Promise.all([
             var locationData = arrCountryRank.filter(function(d) { 
                 return d.location === arrRanklocations[i];
             });
+
+            var currentRank = arrVacDetailLocCurrent.findIndex(x => x.location === arrRanklocations[i]) + 1;
+            var currentTotalVax = arrVacDetailLocCurrent.find(x => x.location === arrRanklocations[i]).total_vaccinations_filled;
+            var currentPer100 = arrVacDetailLocCurrent.find(x => x.location === arrRanklocations[i]).total_vaccinations_per_hundred_filled;
+            var locPopulation = arrVacDetailLocCurrent.find(x => x.location === arrRanklocations[i]).population;
+            var locVaccines = arrVacDetailLocCurrent.find(x => x.location === arrRanklocations[i]).vaccines;
             
-            // loop through current loop country create its x y arrays
+            // create location chart  x y arrays
             for (var j=0; j < locationData.length; j++) {
                 xDate.push(locationData[j].date);
                 xDateSort.push(parseInt(locationData[j].date_sort));
@@ -351,13 +360,11 @@ Promise.all([
                 yRankPctile.push(locationData[j].rank_percentile);
             }
 
-            var xDateSortMin = d3.min(xDateSort.map(d=>d));
+            var xDateMin = d3.min(xDate.map(d=>d));
             var xDateDaysMin = d3.min(xDateDays.map(d=>d));
             var xDateDaysMax = d3.max(xDateDays.map(d=>d));
             var lr = linearRegression(yRankPctile, xDateDays);
             
-            //console.log(arrRanklocations[i], 'xDateDaysMin: ', xDateDaysMin, 'xDateSortMin: ', xDateSortMin, 'xDateDaysMax: ',xDateDaysMax, 'lr.slope: ', lr.slope, 'lr.intercept: ', lr.intercept);
-
             var trRankPctile = {
                 name: '',
                 hoverlabel: {
@@ -433,32 +440,38 @@ Promise.all([
                 }
             }
 
-            // create location subplot div
+            // create location div elements
             var div_location = document.createElement("div");
             var div_span_location = document.createElement("span");
             var div_span_rank = document.createElement("span");
             var div_span_slope = document.createElement("span");
             var div_span_min_date = document.createElement("span");
+            var div_span_total_vaccinations = document.createElement("span");
+            var div_span_population = document.createElement("span");
 
+            // create element id and classnames
             div_location.id = 'locationDiv' + i;
-
             div_location.className = 'location_div';
             div_span_location.className = 'location';
             div_span_rank.className = 'rank';
             div_span_slope.className = 'slope';
             div_span_min_date.className = 'min_date';
+            div_span_total_vaccinations.className = 'total_vaccinations';
+            div_span_population.className = 'population';
 
-            div_span_location.innerHTML = arrRanklocations[i];
-            div_span_rank.innerHTML = currentRank;
-            div_span_slope.innerHTML = lr.slope;
-            div_span_min_date.innerHTML = xDateSortMin;
-
+            // append location div to the parent div_subplots (isotope 'grid')
             document.getElementById('div_subplots').append(div_location);
 
-            div_location.innerHTML += '<span class="location" style="display:None">'+ arrRanklocations[i] +'</span><br>';
-            div_location.innerHTML += '<span class="rank" style="display:None">'+ currentRank + '</span><br>';
-            div_location.innerHTML += '<span class="slope" style="display:None">'+ lr.slope + '</span><br>';
-            div_location.innerHTML += '<span class="min_date" style="display:None">'+ xDateDaysMin + '</span>';
+            // add hidden spans to location div for isotope
+            div_location.innerHTML += '<span class="location span_hide" >'+ arrRanklocations[i] +'</span>';
+            div_location.innerHTML += '<span class="rank span_hide">'+ currentRank + '</span>';
+            div_location.innerHTML += '<span class="min_date span_hide">' + xDateDaysMin + '</span>';
+            div_location.innerHTML += '<span class="slope span_hide">'+ lr.slope + '</span>';
+            div_location.innerHTML += '<span class="total_vaccinations span_hide">' + currentTotalVax + '</span>';
+            div_location.innerHTML += '<span class="population span_hide">' + locPopulation + '</span>';
+
+            // add visible content below chart in location div
+            div_location.innerHTML += '<p class="span_show">Start: '+ xDateMin + '<br>Doses: ' + parseInt(currentTotalVax).toLocaleString() + '<br>Doses per 100: '+ parseFloat(currentPer100).toFixed(2) + '<br>Pop: ' + parseInt(locPopulation).toLocaleString() + '<br>' + locVaccines + '</p>';
 
             // create plotly data, config, chart
             var data = [trRankPctile, trTrendline];
@@ -481,7 +494,9 @@ Promise.all([
             location: '.location',
             rank: '.rank parseInt',
             slope: '.slope parseFloat',
-            min_date: '.min_date parseInt'
+            min_date: '.min_date parseInt',
+            total_vaccinations: '.total_vaccinations parseInt',
+            population: '.population parseInt'
         }
     });
 
