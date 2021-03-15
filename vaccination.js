@@ -311,16 +311,17 @@ Promise.all([
         divChart.className = 'grid';
         var chartTitle = 'COVID-19 Vaccine Doses Administered per 100 People - Rank Percentile By Country';
         var chartDesc = 'Visualizations show vaccine dose administration per 100 people as a rank percentile (blue line) for all countries in OWID dataset. Includes trendline (red dashed line).';
+
         var chartButtons = 
-            '<ul class="list-inline">' +
-                '<li class="list-inline-item">Sort:</li>' +
-                '<li class="list-inline-item btn btn-primary btn-sm sort-btn" data-sort-by="location">Country</li>' +
-                '<li class="list-inline-item btn btn-primary btn-sm sort-btn" data-sort-by="rank" >Rank</li>' +
-                '<li class="list-inline-item btn btn-primary btn-sm sort-btn" data-sort-by="slope">Change</li>' +
-                '<li class="list-inline-item btn btn-primary btn-sm sort-btn" data-sort-by="min_date" >Date</li>' +
-                '<li class="list-inline-item btn btn-primary btn-sm sort-btn" data-sort-by="total_vaccinations">Doses</li>' +
-                '<li class="list-inline-item btn btn-primary btn-sm sort-btn" data-sort-by="population">Population</li>' +
-            '</ul>';
+        '<span>Sort: </span><div class="btn-group" role="group" aria-label="Basic example">' +
+        '<button type="button" class="btn btn-secondary sort-btn" data-sort-by="location">Country</button>' +
+        '<button type="button" class="btn btn-secondary sort-btn" data-sort-by="rank">Rank</button>' +
+        '<button type="button" class="btn btn-secondary sort-btn" data-sort-by="slope">Change</button>' +
+        '<button type="button" class="btn btn-secondary sort-btn" data-sort-by="min_date">Date</button>' +
+        '<button type="button" class="btn btn-secondary sort-btn" data-sort-by="total_vaccinations">Doses</button>' +
+        '<button type="button" class="btn btn-secondary sort-btn" data-sort-by="population">Population</button>' +
+        '</div>';
+
         divTitle.innerHTML = chartTitle;
         divDesc.innerHTML = chartDesc;
         divButtons.innerHTML = chartButtons;
