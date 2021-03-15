@@ -183,11 +183,11 @@ Promise.all([
             autosize: true,
             autoscale: false,
             margin: {
-                l: 20,
-                r: 10,
-                b: 10,
-                t: 10,
-                
+                l: 40,
+                r: 40,
+                b: 120,
+                t: 40,
+                pad: 2
             },
             xaxis: { 
                 tickfont: {
@@ -399,9 +399,9 @@ Promise.all([
             // create chart layout
             var layout = {
                 title: {
-                    text: '<span style="font-weight: bold;">' + arrRanklocations[i] + '</span><br>Current Rank: ' + currentRank,
+                    text: '<span style="font-weight: bold;">' + arrRanklocations[i] + '</span><br><span style="font-size: 70%;">Current Rank: ' + currentRank + '</span>',
                     font: {
-                        size: 12
+                        size: 14
                     },
                 },
                 autosize: false,
@@ -411,7 +411,7 @@ Promise.all([
                 margin: {
                     l: 20,
                     r: 10,
-                    b: 30,
+                    b: 10,
                     t: 50
                 },
                 showlegend: false,
