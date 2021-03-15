@@ -402,14 +402,14 @@ Promise.all([
                         size: 14
                     },
                 },
-                autosize: false,
+                autosize: true,
                 autoscale: false,
                 width: 200,
-                height: 200,
+                height: 175,
                 margin: {
                     l: 20,
                     r: 10,
-                    b: 30,
+                    b: 25,
                     t: 50
                 },
                 showlegend: false,
@@ -419,7 +419,7 @@ Promise.all([
                         size: 9
                     },
                     showgrid: false,
-                    range:[minVacDate, maxVacDate],
+                    range: [minVacDate, maxVacDate],
                 },
                 yaxis: { 
                     title: {
