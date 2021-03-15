@@ -1,0 +1,23 @@
+
+.container { 
+    margin-top: 20px;
+    margin-bottom: 40px; 
+}
+
+.modebar{
+    display: none !important;
+}
+
+.div_chart {
+    margin-top: 40px;
+}
+
+.tbl_date_row {
+    background-color: lightgray;
+    padding: 5px;
+}
+
+.location_div {
+    display: inline-block;
+    padding: 5px;
+  }
