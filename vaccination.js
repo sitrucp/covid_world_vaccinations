@@ -313,13 +313,13 @@ Promise.all([
         var chartDesc = 'Visualizations show vaccine dose administration per 100 people as a rank percentile (blue line) for all countries in OWID dataset. Includes trendline (red dashed line).';
 
         var chartButtons = 
-        '<span>Sort: </span><div class="btn-group" role="group" aria-label="Basic example">' +
-        '<button type="button" class="btn btn-secondary sort-btn" data-sort-by="location">Country</button>' +
-        '<button type="button" class="btn btn-secondary sort-btn" data-sort-by="rank">Rank</button>' +
-        '<button type="button" class="btn btn-secondary sort-btn" data-sort-by="slope">Change</button>' +
-        '<button type="button" class="btn btn-secondary sort-btn" data-sort-by="min_date">Date</button>' +
-        '<button type="button" class="btn btn-secondary sort-btn" data-sort-by="total_vaccinations">Doses</button>' +
-        '<button type="button" class="btn btn-secondary sort-btn" data-sort-by="population">Population</button>' +
+        '<span><strong>Sort:</strong> </span><div class="btn-group" role="group" aria-label="Basic example">' +
+        '<button type="button" class="btn btn-light sort-btn" data-sort-by="location">Country</button>' +
+        '<button type="button" class="btn btn-light sort-btn" data-sort-by="rank">Rank</button>' +
+        '<button type="button" class="btn btn-light sort-btn" data-sort-by="slope">Change</button>' +
+        '<button type="button" class="btn btn-light sort-btn" data-sort-by="min_date">Date</button>' +
+        '<button type="button" class="btn btn-light sort-btn" data-sort-by="total_vaccinations">Doses</button>' +
+        '<button type="button" class="btn btn-light sort-btn" data-sort-by="population">Population</button>' +
         '</div>';
 
         divTitle.innerHTML = chartTitle;
@@ -470,7 +470,7 @@ Promise.all([
             div_location.innerHTML += '<span class="slope span_hide">'+ lr.slope + '</span>';
             div_location.innerHTML += '<span class="total_vaccinations span_hide">' + currentTotalVax + '</span>';
             div_location.innerHTML += '<span class="population span_hide">' + locPopulation + '</span>';
-            
+
             // add visible content below chart in location div
             div_location.innerHTML += '<p class="span_show">Current Rank: ' + currentRank + ' <br>Start: '+ xDateMin + '<br>Doses: ' + parseInt(currentTotalVax).toLocaleString() + '<br>Doses per 100: '+ parseFloat(currentPer100).toFixed(2) + '<br>Pop: ' + parseInt(locPopulation).toLocaleString() + '<br>' + locVaccines + '</p>';
 
