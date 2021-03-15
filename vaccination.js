@@ -492,10 +492,10 @@ Promise.all([
         var sortByValue = $(this).attr('data-sort-by');
         if ($(this).hasClass('active')) {
             $(this).removeClass('active');
-            varSortOrder = true;
+            varSortOrder = false;
         } else {
             $(this).addClass('active');
-            varSortOrder = false;
+            varSortOrder = true;
         }
         $grid.isotope({ 
             sortBy: sortByValue,
