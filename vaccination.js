@@ -379,9 +379,7 @@ Promise.all([
 
             var trTrendline = {
                 name: '',
-                hoverlabel: {
-                    namelength :-1
-                },
+                hoverinfo:'skip',
                 yaxis: 'y',
                 x: [getDiffDate(xDateDaysMin), getDiffDate(xDateDaysMax)],
                 y: [xDateDaysMin * lr.slope + lr.intercept, xDateDaysMax * lr.slope + lr.intercept],
@@ -411,7 +409,7 @@ Promise.all([
                 margin: {
                     l: 20,
                     r: 10,
-                    b: 10,
+                    b: 30,
                     t: 50
                 },
                 showlegend: false,
