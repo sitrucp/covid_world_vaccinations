@@ -405,7 +405,7 @@ Promise.all([
             // create chart layout
             var layout = {
                 title: {
-                    text: '<span style="font-weight: bold;">' + arrRanklocations[i] + '</span><br><span style="font-size: 70%;">Current Rank: ' + currentRank + '</span>',
+                    text: '<span style="font-weight: bold;">' + arrRanklocations[i] + '</span>',
                     font: {
                         size: 14
                     },
@@ -470,9 +470,9 @@ Promise.all([
             div_location.innerHTML += '<span class="slope span_hide">'+ lr.slope + '</span>';
             div_location.innerHTML += '<span class="total_vaccinations span_hide">' + currentTotalVax + '</span>';
             div_location.innerHTML += '<span class="population span_hide">' + locPopulation + '</span>';
-
+            
             // add visible content below chart in location div
-            div_location.innerHTML += '<p class="span_show">Start: '+ xDateMin + '<br>Doses: ' + parseInt(currentTotalVax).toLocaleString() + '<br>Doses per 100: '+ parseFloat(currentPer100).toFixed(2) + '<br>Pop: ' + parseInt(locPopulation).toLocaleString() + '<br>' + locVaccines + '</p>';
+            div_location.innerHTML += '<p class="span_show">Current Rank: ' + currentRank + ' <br>Start: '+ xDateMin + '<br>Doses: ' + parseInt(currentTotalVax).toLocaleString() + '<br>Doses per 100: '+ parseFloat(currentPer100).toFixed(2) + '<br>Pop: ' + parseInt(locPopulation).toLocaleString() + '<br>' + locVaccines + '</p>';
 
             // create plotly data, config, chart
             var data = [trRankPctile, trTrendline];
