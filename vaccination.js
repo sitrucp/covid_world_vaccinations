@@ -314,12 +314,12 @@ Promise.all([
 
         var chartButtons = 
         '<span><strong>Sort:</strong> </span><div class="btn-group" role="group" aria-label="Basic example">' +
-        '<button type="button" class="btn btn-light sort-btn" data-sort-by="location">Country</button>' +
-        '<button type="button" class="btn btn-light sort-btn" data-sort-by="rank">Rank</button>' +
-        '<button type="button" class="btn btn-light sort-btn" data-sort-by="slope">Change</button>' +
-        '<button type="button" class="btn btn-light sort-btn" data-sort-by="min_date">Date</button>' +
-        '<button type="button" class="btn btn-light sort-btn" data-sort-by="total_vaccinations">Doses</button>' +
-        '<button type="button" class="btn btn-light sort-btn" data-sort-by="population">Population</button>' +
+        '<button type="button" class="btn btn-light sort-btn" value="asc" data-sort-by="location">Country</button>' +
+        '<button type="button" class="btn btn-light sort-btn" value="asc" data-sort-by="rank">Rank</button>' +
+        '<button type="button" class="btn btn-light sort-btn" value="asc" data-sort-by="slope">Change</button>' +
+        '<button type="button" class="btn btn-light sort-btn" value="asc" data-sort-by="min_date">Date</button>' +
+        '<button type="button" class="btn btn-light sort-btn" value="asc" data-sort-by="total_vaccinations">Doses</button>' +
+        '<button type="button" class="btn btn-light sort-btn" value="asc" data-sort-by="population">Population</button>' +
         '</div>';
 
         divTitle.innerHTML = chartTitle;
@@ -504,11 +504,11 @@ Promise.all([
     // isotope button clicks
     $('.sort-btn').on( 'click', function() {
         var sortByValue = $(this).attr('data-sort-by');
-        if ($(this).hasClass('active')) {
-            $(this).removeClass('active');
+        if ($(this).val() == "asc") {
+            $(this).val("desc");
             varSortOrder = false;
         } else {
-            $(this).addClass('active');
+            $(this).val("asc");
             varSortOrder = true;
         }
         $grid.isotope({ 
