@@ -137,7 +137,7 @@ Promise.all([
         var divDesc= document.createElement("p");
         var divChart = document.createElement("div");
         divChart.id = 'div_chart';
-        var chartTitle = 'Doses per 100 People Rank By Country';
+        var chartTitle = 'COVID-19 Vaccine Doses Administered per 100 People - Rank By Country';
         var chartDesc = 'Shows vaccine doses administered per 100 people for all ' + countryCount + ' countries currently in OWID dataset.';
         divTitle.innerHTML = chartTitle;
         divDesc.innerHTML = chartDesc;
@@ -307,7 +307,7 @@ Promise.all([
         var divButtons = document.createElement("div");
         divChart.id = 'div_subplots';
         divChart.className = 'grid';
-        var chartTitle = 'Daily Global Rank of Doses per 100 People By Country';
+        var chartTitle = 'COVID-19 Vaccine Doses Administered per 100 People - Rank Percentile By Country';
         var chartDesc = 'Visualizations show vaccine dose administration per 100 people as a rank percentile (blue line) for all countries in OWID dataset. Includes trendline (red dashed line).';
         var chartButtons = 
             '<ul class="list-inline">' +
