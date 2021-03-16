@@ -483,6 +483,105 @@ Promise.all([
         
     }
 
+    
+    /*
+    // CREATE VACCINE GROUP CHART
+    function createVaccineGroupChart() {
+        // create divs, para for Country chart
+        var divTitle = document.createElement("h4");
+        var divDesc= document.createElement("p");
+        var divChart = document.createElement("div");
+        var chartTitle = "Global Share by Vaccine Group";
+        var chartDesc = 'Shows count of countries by vaccine group (PMAJ, No PMAJ, Partial PMAJ). PMAJ = Pfizer, Moderna, AstraZenaca, Johnson & Johson vaccines. Non-PMAJ =  Chinese and Russian vaccines. Partial PMAJ = mix of both PMAJ and Non-PMAJ.';
+        divChart.id = 'div_vaccine_group_chart';
+        divTitle.innerHTML = chartTitle;
+        divDesc.innerHTML = chartDesc;
+        document.getElementById('div_vaccine_group').append(divTitle);
+        document.getElementById('div_vaccine_group').append(divDesc);
+        document.getElementById('div_vaccine_group').append(divChart);
+
+        // summarize location by country's last date reported <= loopDate
+        var arrVaccineGroupCounts = d3.nest()
+        .key(function(d) { return d.vaccine_group; })
+        .rollup(function(v) { return v.length; })
+        .entries(vacCurrent);
+
+        var arrVaccineGroupCounts = d3.nest()
+        .key(function(d) { return d.vaccine_group; })
+        .rollup(function(v) { return v.length; })
+        .entries(vacCurrent)
+        .map(function(group) {
+            return {
+            vaccine_group: group.key,
+            country_count: group.value
+            }
+        });
+
+        // create x and y axis data sets
+        var x = [];
+        var y = [];
+
+        // create axes x and y arrays
+        for (var i=0; i<arrVaccineGroupCounts.length; i++) {
+            var row = arrVaccineGroupCounts[i];
+            x.push(row['vaccine_group']);
+            y.push(row['country_count']);
+        }
+
+        // create chart traces
+        var trVaccineGroup = {
+            name: 'Vaccine Group',
+            hoverlabel: {
+                namelength :-1
+            },
+            x: x,
+            y: y,
+            showgrid: false,
+            type: 'bar',
+            marker:{
+                color: clrBlue
+            },
+        };
+
+        // create chart layout
+        var layout = {
+            title: {
+                text:'Vaccine Group Country Counts<br>PMAJ = Pfizer, Moderna, AstraZenaca, Johnson & Johson',
+                font: {
+                    size: 14
+                },
+            },
+            autosize: true,
+            autoscale: false,
+            margin: {
+                l: 30,
+                r: 40,
+                b: 80,
+                t: 80,
+                pad: 2
+            },
+            xaxis: { 
+                tickfont: {
+                    size: 11
+                },
+                showgrid: false
+            },
+            yaxis: { 
+                tickfont: {
+                    size: 11
+                },
+                showgrid: false
+            }
+        }
+
+        // plotly data, config, create chart
+        var data = [trVaccineGroup];
+        var config = {responsive: true}
+        Plotly.newPlot('div_vaccine_group_chart', data, layout, config);
+
+    }
+    */
+
     // create charts when page loads
     createGlobalRankChart();
     createAllCountryRankSubPlots();
@@ -655,3 +754,4 @@ function hideShowDiv(id) {
    else
       e.style.display = 'block';
 }
+
