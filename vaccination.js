@@ -313,7 +313,7 @@ Promise.all([
         var chartDesc = 'Visualizations show vaccine dose administration per 100 people as a rank percentile (blue line) for all countries in OWID dataset. Includes trendline (red dashed line).';
 
         var chartButtons = 
-        '<span><strong>Sort:</strong> </span><div class="btn-group" role="group" aria-label="Basic example">' +
+        '<span><strong>Sort:</strong> </span><div class="btn-group flex-wrap" role="group" aria-label="Basic example">' +
         '<button type="button" class="btn btn-light sort-btn" value="asc" data-sort-by="location">Country</button>' +
         '<button type="button" class="btn btn-light sort-btn" value="asc" data-sort-by="rank">Rank</button>' +
         '<button type="button" class="btn btn-light sort-btn" value="asc" data-sort-by="slope">Change</button>' +
