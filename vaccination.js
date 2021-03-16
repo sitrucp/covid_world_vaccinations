@@ -506,10 +506,10 @@ Promise.all([
         var sortByValue = $(this).attr('data-sort-by');
         if ($(this).val() == "asc") {
             $(this).val("desc");
-            varSortOrder = false;
+            varSortOrder = true;
         } else {
             $(this).val("asc");
-            varSortOrder = true;
+            varSortOrder = false;
         }
         $grid.isotope({ 
             sortBy: sortByValue,
