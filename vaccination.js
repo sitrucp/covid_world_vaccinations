@@ -9,10 +9,12 @@ var file_population = "https://raw.githubusercontent.com/owid/COVID-19-data/mast
 var file_vaccine_group = "vaccine_groups.csv";
 //var file_population = "population.csv";
 
-// define color variables 
-var clrBlue = 'rgba(49,130,189,.9)';
-var clrRed = 'rgba(255,0,0,.9)';
-var clrGray = 'rgba(204,204,204,.9)';
+// define color variables
+var clrBlue = 'rgba(49,130,189,.5)';
+var clrRed = 'rgba(215,25,28,.5)';
+var clrPink = 'rgba(233,163,201,.5)'
+var clrGreen = 'rgba(26,150,65, .5)';
+var clrGray = 'rgba(204,204,204,.5)';
 var clrBlack = 'rgba(0,0,0,.9)';
 var clrWhiteTransparent = 'rgba(255,255,255,0)';
 
@@ -104,6 +106,16 @@ Promise.all([
         ({concatLocDate, location, iso_code, date, date_sort, total_vaccinations, total_vaccinations_filled, people_vaccinated, people_fully_vaccinated, daily_vaccinations_raw, daily_vaccinations, total_vaccinations_per_hundred, total_vaccinations_per_hundred_filled, people_vaccinated_per_hundred, people_fully_vaccinated_per_hundred, daily_vaccinations_per_million, daily_vaccinations_per_hundred, vaccines, last_observation_date, owid_vaccine_alt, vaccine_group, population, source}), 
         {population: null});
 
+
+    // yesterday.setDate(yesterday.getDate() - 1)
+   // write fill forward total vaccinations & per 100 arrays back to arrVacDetail
+   var i = 0;
+   arrVacDetailLoc.forEach(function(d) {
+       d.total_vaccinations_per_hundred_filled_prev = arrVacPer100Filled[i-1];
+       d.total_vaccinations_filled_prev = arrTotalVaccinationsFilled[i-1];
+       i++;
+   });
+
     // filter vaccinations dataset by location max date to get current records only
     const arrVacDetailLocCurrent = arrVacDetailLoc.filter(function(d) {
         return d.date == d.last_observation_date;
@@ -135,25 +147,48 @@ Promise.all([
         // create divs, para for chart
         var divTitle = document.createElement("h4");
         var divDesc= document.createElement("p");
+        var divLegend = document.createElement("ul");
         var divChart = document.createElement("div");
         divChart.id = 'div_chart';
         var chartTitle = 'COVID-19 Vaccine Doses Administered per 100 People - Rank By Country';
         var chartDesc = 'Shows vaccine doses administered per 100 people for all ' + countryCount + ' countries currently in OWID dataset.';
+        var chartLegend = 
+            '<li class="list-inline-item">Change from previous day:</li>' + 
+            '<li class="list-inline-item">Increase</li>' + 
+            '<li class="list-inline-item legend_box_green"> </li>' + 
+            '<li class="list-inline-item">Decrease</li>' + 
+            '<li class="list-inline-item legend_box_red"> </li>' + 
+            '<li class="list-inline-item">Unchanged</li>' + 
+            '<li class="list-inline-item legend_box_gray"> </li>';
         divTitle.innerHTML = chartTitle;
         divDesc.innerHTML = chartDesc;
+        divLegend.innerHTML = chartLegend;
+        divLegend.className = 'list-inline small';
         document.getElementById('div_current_rank').append(divTitle);
         document.getElementById('div_current_rank').append(divDesc);
+        document.getElementById('div_current_rank').append(divLegend);
         document.getElementById('div_current_rank').append(divChart);
  
         // define x and y axis arrays
         var x = [];
         var yPer100 = [];
+        var yper100Prev = [];
+        var yper100Change = [];
  
         // create axes x and y arrays
         for (var i=0; i<arrVacDetailLocCurrentGroup.length; i++) {
             var row = arrVacDetailLocCurrentGroup[i];
             x.push(row['location']);
             yPer100.push(row['total_vaccinations_per_hundred_filled']);
+            yper100Prev.push(row['total_vaccinations_per_hundred_filled_prev']);
+            if (row['total_vaccinations_per_hundred_filled'] > row['total_vaccinations_per_hundred_filled_prev']) {
+                yper100Change.push('increase');
+            } else if (row['total_vaccinations_per_hundred_filled'] < row['total_vaccinations_per_hundred_filled_prev']) {
+                yper100Change.push('decrease');
+            } else {
+                yper100Change.push('unchanged');
+            }
+            
         }
 
         // create chart trace
@@ -168,7 +203,7 @@ Promise.all([
             fill: 'tozeroy',
             type: 'bar',
             marker:{
-                color: clrGray,
+                color: fillColor(yPer100, yper100Prev) // red, green, gray based on change from prev
             },
         };
 
@@ -735,12 +770,14 @@ function getVaccineGroup(vaccine, arrVaccineGroup) {
     return new_name
 }
 
-// assign bar color based on x value
-function fillColor(x, location) {
+// assign bar color based on current and prev per 100 values
+function fillColor(yper100, yper100Prev) {
     colors = [];
-    for (var i=0; i<x.length; i++) {
-        if (x[i] == selCountry) {
-            colors.push(clrBlue);
+    for (var i = 0; i < yper100.length; i++) {
+        if (yper100[i] > yper100Prev[i]) {
+            colors.push(clrGreen);
+        } else if (yper100[i] < yper100Prev[i]) {
+            colors.push(clrRed);
         } else {
             colors.push(clrGray);
         }
