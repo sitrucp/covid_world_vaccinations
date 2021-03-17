@@ -1,16 +1,14 @@
-# Canada COVID-19 Vaccine Administration vs Other Countries
+# Global COVID-19 Vaccination Ranking
 
-These visualizations illustrate Canada's COVID-19 vaccine dose administration global ranking and daily changes. The 3 visualizations include:
-            
-* "Total Doses Per 100 Persons" is shown for all countries administering vaccines that are tracked by Our World in Data organization. Canada's value is highlighted and shows current global ranking by doses per 100 people.
-        
-* Canada's "Total Doses Per 100 Persons" and it's global ranking are shown by date. This shows Canada's relative global ranking changes by day. A higher rank means that other countries are administering more doses per 100 people than Canada.
+These visualizations illustrate global COVID-19 vaccine dose administration ranking by country and date. The 3 visualizations include:
 
-* Canada's "Daily Doses Per 100 Persons" is shown by date. This metric shows Canada's actual daily dose administration.
+* COVID-19 Vaccine Doses Administered per 100 People - Rank By Country - Shows vaccine doses administered per 100 people for all 132 countries currently in OWID dataset.
+
+* COVID-19 Vaccine Doses Administered per 100 People - Rank Percentile By Country - Visualizations show vaccine dose administration per 100 people as a rank percentile (blue line) for all countries in OWID dataset. Includes trendline (red dashed line).
 
 ## View visualizations here
 
-<a href="https://sitrucp.github.io/covid_global_vaccinations/index.html" target="_blank">https://sitrucp.github.io/covid_global_vaccinations/index.html</a>
+<a href="https://sitrucp.github.io/covid_world_vaccinations/index.html" target="_blank">https://sitrucp.github.io/covid_world_vaccinations/index.html</a>
 
 ## Data source
 
