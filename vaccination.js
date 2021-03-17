@@ -346,9 +346,7 @@ Promise.all([
             var locationData = arrCountryRank.filter(function(d) { 
                 return d.location === arrRanklocations[i];
             });
-
-            console.log(arrRanklocations[i]);
-
+            
             var currentRank = arrVacDetailLocCurrent.findIndex(x => x.location === arrRanklocations[i]) + 1;
             var currentTotalVax = arrVacDetailLocCurrent.find(x => x.location === arrRanklocations[i]).total_vaccinations_filled;
             var currentPer100 = arrVacDetailLocCurrent.find(x => x.location === arrRanklocations[i]).total_vaccinations_per_hundred_filled;
