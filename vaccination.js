@@ -42,7 +42,7 @@ Promise.all([
 
     // exclude dupe locations from vaccinations array
     const arrVacDetail = arrVaccinations.filter(function(d) { 
-        return d.location != "England" && d.location != "European Union" && d.location != "Gibraltar" && d.location != "Northern Ireland" && d.location != "Scotland" && d.location != "Wales" && d.location != "World";
+        return d.location != "England" && d.location != "European Union" && d.location != "Gibraltar" && d.location != "Northern Ireland" && d.location != "Scotland" && d.location != "Wales" && d.location != "World" && d.location != "Africa" && d.location != "Asia" && d.location != "Europe" && d.location != "North America" && d.location != "South America" && d.location != "Oceania";
     });
 
     // add  daily vaccinations per 100 column & reformatted date for sorting
@@ -347,11 +347,15 @@ Promise.all([
                 return d.location === arrRanklocations[i];
             });
 
+            console.log(arrRanklocations[i]);
+
             var currentRank = arrVacDetailLocCurrent.findIndex(x => x.location === arrRanklocations[i]) + 1;
             var currentTotalVax = arrVacDetailLocCurrent.find(x => x.location === arrRanklocations[i]).total_vaccinations_filled;
             var currentPer100 = arrVacDetailLocCurrent.find(x => x.location === arrRanklocations[i]).total_vaccinations_per_hundred_filled;
             var locPopulation = arrVacDetailLocCurrent.find(x => x.location === arrRanklocations[i]).population;
             var locVaccines = arrVacDetailLocCurrent.find(x => x.location === arrRanklocations[i]).vaccines;
+
+            
             
             // create location chart  x y arrays
             for (var j=0; j < locationData.length; j++) {
