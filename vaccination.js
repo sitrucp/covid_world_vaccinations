@@ -351,7 +351,7 @@ Promise.all([
         '<span><strong>Sort:</strong> </span><div class="btn-group flex-wrap" role="group" aria-label="Basic example">' +
         '<button type="button" class="btn btn-light sort-btn" value="asc" data-sort-by="location">Country</button>' +
         '<button type="button" class="btn btn-light sort-btn" value="asc" data-sort-by="rank">Rank</button>' +
-        '<button type="button" class="btn btn-light sort-btn" value="asc" data-sort-by="slope">Change</button>' +
+        '<button type="button" class="btn btn-light sort-btn" value="asc" data-sort-by="slope">Trend</button>' +
         '<button type="button" class="btn btn-light sort-btn" value="asc" data-sort-by="min_date">Date</button>' +
         '<button type="button" class="btn btn-light sort-btn" value="asc" data-sort-by="total_vaccinations">Doses</button>' +
         '<button type="button" class="btn btn-light sort-btn" value="asc" data-sort-by="population">Population</button>' +
