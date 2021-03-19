@@ -2,6 +2,9 @@ owid_vaccine,owid_vaccine_alt,vaccine_group
 "Covaxin, Oxford/AstraZeneca","Covaxin, Oxford/AstraZeneca",PMAJ
 "EpiVacCorona, Sputnik V","EpiVacCorona, Sputnik V",Non-PMAJ
 Johnson&Johnson,Johnson&Johnson,PMAJ
+"Johnson&Johnson, Moderna, Pfizer/BioNTech","Johnson&Johnson, Moderna, Pfizer/BioNTech",PMAJ
+Moderna,Moderna,PMAJ
+"Moderna, Oxford/AstraZeneca","Moderna, Oxford/AstraZeneca",PMAJ
 "Moderna, Oxford/AstraZeneca, Pfizer/BioNTech","Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",PMAJ
 "Moderna, Oxford/AstraZeneca, Pfizer/BioNTech, Sinopharm/Beijing, Sputnik V","Moderna, Oxford/AstraZeneca, Pfizer/BioNTech, Sinopharm/Beijing, Sputnik V",Partial PMAJ
 "Moderna, Pfizer/BioNTech","Moderna, Pfizer/BioNTech",PMAJ
@@ -13,12 +16,12 @@ Oxford/AstraZeneca,Oxford/AstraZeneca,PMAJ
 "Oxford/AstraZeneca, Sinopharm/Beijing","Oxford/AstraZeneca, Sinopharm/Beijing",Partial PMAJ
 "Oxford/AstraZeneca, Sinopharm/Beijing, Sputnik V","Oxford/AstraZeneca, Sinopharm/Beijing, Sputnik V",Partial PMAJ
 "Oxford/AstraZeneca, Sinovac","Oxford/AstraZeneca, Sinovac",Partial PMAJ
-"Oxford/AstraZeneca, Sputnik V","Oxford/AstraZeneca, Sputnik V",Partial PMAJ
+"Pfizer/ BioNTech, Sinopharm/Beijing","Pfizer/ BioNTech, Sinopharm/Beijing",PMAJ
 Pfizer/BioNTech,Pfizer/BioNTech,PMAJ
 "Pfizer/BioNTech, Sinopharm/Beijing","Pfizer/BioNTech, Sinopharm/Beijing",Partial PMAJ
-"Pfizer/BioNTech, Sinopharm/Beijing, Sputnik V","Pfizer/BioNTech, Sinopharm/Beijing, Sputnik V",Partial PMAJ
 "Pfizer/BioNTech, Sinovac","Pfizer/BioNTech, Sinovac",Partial PMAJ
 Sinopharm/Beijing,Sinopharm/Beijing,Non-PMAJ
 "Sinopharm/Beijing, Sinopharm/Wuhan, Sinovac","Sinopharm/Beijing, Sinopharm/Wuhan, Sinovac",Non-PMAJ
+"Sinopharm/Beijing, Sputnik V","Sinopharm/Beijing, Sputnik V",Non-PMAJ
 Sinovac,Sinovac,Non-PMAJ
 Sputnik V,Sputnik V,Non-PMAJ
