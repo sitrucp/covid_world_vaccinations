@@ -38,43 +38,28 @@
 
 <body>
 
-<div class="container">
-    <div class="row">
-        <div class="col-md-12">
-            <h1 id="title">Global COVID-19 Vaccination Ranking</h1>
-            <p id="last_update"></p>
-        </div>
-    </div>
+    <button onclick="getData('',0)">All</button>
+    <button onclick="getData('PMAJ','')">PMAJ</button>
+    <button onclick="getData('Partial PMAJ','')">Partial PMAJ</button>
+    <button onclick="getData('non-PMAJ','')">Non-PMAJ</button>
 
-    <div class="row">
-        <div class="col-md-12">
-            <ul class="list-inline small">
-                <li class="list-inline-item"><a href="https://sitrucp.github.io/covid_canada_vaccinations/">Canada COVID-19</a></li>
-                <li class="list-inline-item">/</li>
-                <li class="list-inline-item">Global COVID-19 Vaccination Ranking</li>
-            </ul>
-        </div>
-    </div>
+    <div class="form-check">
+        <label class="form-check-label">
+          <input type="checkbox" class="form-check-input" value="">Option 1
+        </label>
+      </div>
+      <div class="form-check">
+        <label class="form-check-label">
+          <input type="checkbox" class="form-check-input" value="">Option 2
+        </label>
+      </div>
+      <div class="form-check">
+        <label class="form-check-label">
+          <input type="checkbox" class="form-check-input" value="" disabled>Option 3
+        </label>
+      </div>
+      
+    <script src="vaccination2.js"></script>
 
-    <div class="row row-no-gutters">
-
-        <div class="col-md-12">
-
-            <p>These visualizations illustrate global COVID-19 vaccine dose administration ranking by country and date.</p>
-
-            <p class="font-italic">COVID-19 vaccine data comes from <a href = "https://github.com/owid/COVID-19-data/tree/master/public/data/vaccinations" target="blank">Our World In Data (OWID)</a> who are doing an amazing job collating COVID-19 data from around the world!</p>
-            
-            <div id="div_current_rank" class="div_chart"></div>
-
-            <div id="div_country_rank" class="div_chart"></div>
-
-            <p>Site files: <a href="https://github.com/sitrucp/covid_world_vaccinations" target="blank">github.com/sitrucp/covid_world_vaccinations</a></p>
-
-        </div>
-
-    </div>
-
-</div>
-<script src="vaccination.js"></script>
 </body>
 </html>
