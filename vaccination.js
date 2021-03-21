@@ -144,11 +144,12 @@ function getData(fltrVaccineGroup, fltrPopulation){
             document.getElementById('div_current_rank').innerHTML = '';
             var divTitle = document.createElement("h4");
             var divDesc= document.createElement("p");
-            var divLegend = document.createElement("ul");
+            //var divLegend = document.createElement("ul");
             var divChart = document.createElement("div");
             divChart.id = 'div_chart';
             var chartTitle = 'COVID-19 Vaccine Doses Administered per 100 People - Rank By Country';
             var chartDesc = 'Shows vaccine doses administered per 100 people for all ' + countryCount + ' countries currently in OWID dataset.';
+            /*
             var chartLegend = 
                 '<li class="list-inline-item">Change from previous day:</li>' + 
                 '<li class="list-inline-item">Increase</li>' + 
@@ -157,13 +158,14 @@ function getData(fltrVaccineGroup, fltrPopulation){
                 '<li class="list-inline-item legend_box_red"> </li>' + 
                 '<li class="list-inline-item">Unchanged</li>' + 
                 '<li class="list-inline-item legend_box_gray"> </li>';
+            */
             divTitle.innerHTML = chartTitle;
             divDesc.innerHTML = chartDesc;
-            divLegend.innerHTML = chartLegend;
-            divLegend.className = 'list-inline small';
+            //divLegend.innerHTML = chartLegend;
+            //divLegend.className = 'list-inline small';
             document.getElementById('div_current_rank').append(divTitle);
             document.getElementById('div_current_rank').append(divDesc);
-            document.getElementById('div_current_rank').append(divLegend);
+            //document.getElementById('div_current_rank').append(divLegend);
             document.getElementById('div_current_rank').append(divChart);
     
             // define x and y axis arrays
