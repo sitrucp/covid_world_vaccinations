@@ -16,7 +16,7 @@ const clrBlue = 'rgba(49,130,189,.5)';
 const clrRed = 'rgba(215,25,28,.5)';
 const clrPink = 'rgba(233,163,201,.5)'
 const clrGreen = 'rgba(26,150,65, .5)';
-const clrGray = 'rgba(204,204,204,.5)';
+const clrGray = 'rgba(204,204,204,.9)';
 const clrBlack = 'rgba(0,0,0,.9)';
 const clrWhiteTransparent = 'rgba(255,255,255,0)';
 
@@ -192,7 +192,7 @@ function getData(fltrVaccineGroup, fltrPopulation){
                 fill: 'tozeroy',
                 type: 'bar',
                 marker:{
-                    color: clrBlue, // fillColor(yPer100, yper100Prev) // red, green, gray based on change from prev
+                    color: clrGray, // fillColor(yPer100, yper100Prev) // red, green, gray based on change from prev
                 },
             };
 
