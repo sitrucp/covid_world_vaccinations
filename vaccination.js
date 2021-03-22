@@ -215,7 +215,7 @@ function getData(fltrVaccineGroup, fltrPopulation){
                 },
                 xaxis: { 
                     tickfont: {
-                        size: 9
+                        size: 8
                     },
                     showgrid: false,
                     tickmode: 'linear',
