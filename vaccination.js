@@ -66,9 +66,9 @@ function getData(fltrVaccineGroup, fltrPopulation){
         arrVacDetail.sort((a, b) => a.location.localeCompare(b.location) || a.date_sort - b.date_sort);
 
         // create new fill up arrays
-        arrVacPer100Filled = fillUpArray(arrVacDetail.map(function(i){return i.total_vaccinations_per_hundred;}));
-        arrTotalVaccinationsFilled = fillUpArray(arrVacDetail.map(function(i){return i.total_vaccinations;}));
-        arrDailyVaccinationsFilled = fillUpArray(arrVacDetail.map(function(i){return i.daily_vaccinations_per_hundred;}));
+        arrVacPer100Filled = getFilledUpArray(arrVacDetail.map(function(i){return i.total_vaccinations_per_hundred;}));
+        arrTotalVaccinationsFilled = getFilledUpArray(arrVacDetail.map(function(i){return i.total_vaccinations;}));
+        arrDailyVaccinationsFilled = getFilledUpArray(arrVacDetail.map(function(i){return i.daily_vaccinations_per_hundred;}));
 
         // write new fill up arrays back to arrVacDetail
         var i = 0;
@@ -100,15 +100,6 @@ function getData(fltrVaccineGroup, fltrPopulation){
             ({concatLocDate, location, iso_code, date, date_sort, total_vaccinations, total_vaccinations_filled, people_vaccinated, people_fully_vaccinated, daily_vaccinations_raw, daily_vaccinations, total_vaccinations_per_hundred, total_vaccinations_per_hundred_filled, people_vaccinated_per_hundred, people_fully_vaccinated_per_hundred, daily_vaccinations_per_million, daily_vaccinations_per_hundred, daily_vaccinations_per_hundred_filled}, {vaccines, last_observation_date, owid_vaccine_alt, vaccine_group, population}, ) => 
             ({concatLocDate, location, iso_code, date, date_sort, total_vaccinations, total_vaccinations_filled, people_vaccinated, people_fully_vaccinated, daily_vaccinations_raw, daily_vaccinations, total_vaccinations_per_hundred, total_vaccinations_per_hundred_filled, people_vaccinated_per_hundred, people_fully_vaccinated_per_hundred, daily_vaccinations_per_million, daily_vaccinations_per_hundred, daily_vaccinations_per_hundred_filled, vaccines, last_observation_date, owid_vaccine_alt, vaccine_group, population}), 
             {population: null});
-
-        // write prev (eg i-1 day) fill forward array values to arrVacDetail
-        var i = 0;
-        arrVacDetailLoc.forEach(function(d) {
-            d.total_vaccinations_per_hundred_filled_prev = arrVacPer100Filled[i-1];
-            d.total_vaccinations_filled_prev = arrTotalVaccinationsFilled[i-1];
-            d.daily_vaccinations_per_hundred_filled_prev = arrDailyVaccinationsFilled[i-1];
-            i++;
-        });
 
         // create new element in arrVacDetailLoc
         arrVacDetailLoc.forEach(function(d) {
@@ -691,7 +682,7 @@ function dateDiffInDays(a, b) {
   }
 
 // fill 'up' array - if value missing get prev values
-    function fillUpArray(array) {
+    function getFilledUpArray(array) {
     let lastDefinedElement;
     return array.map(element => {
         if (element === "") {

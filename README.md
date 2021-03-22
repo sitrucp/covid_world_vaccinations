@@ -1,10 +1,16 @@
-# Global COVID-19 Vaccination Ranking
+# Global COVID-19 Vaccination Rank History
 
-These visualizations illustrate global COVID-19 vaccine dose administration ranking by country and date. The 3 visualizations include:
+These visualizations illustrate global COVID-19 vaccine total doses administered per 100 people rank percentile by date for all countries in OWID data. Rank percentile captures rank independent of country count which increases with time. 
 
-* COVID-19 Vaccine Doses Administered per 100 People - Rank By Country - Shows vaccine doses administered per 100 people for all 132 countries currently in OWID dataset.
+Also includes a linear regression trendline that shows countries dose administration trend over its administration history.
 
-* COVID-19 Vaccine Doses Administered per 100 People - Rank Percentile By Country - Visualizations show vaccine dose administration per 100 people as a rank percentile (blue line) for all countries in OWID dataset. Includes trendline (red dashed line).
+The visualization also includes sorting countries by country name, trend, total doses administered, population, date.
+
+Note: 
+
+Creating rank history required 'filling up' missing values from last available past value for days where a country does not have data available. This often occurs over weekends, or other various reasons where a country data has missing data.
+
+Rank percentile is based on global rank, not the actual total or daily dose value
 
 ## View visualizations here
 
