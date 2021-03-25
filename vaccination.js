@@ -47,8 +47,8 @@ function getData(fltrVaccineGroup, fltrPopulation){
         var updateTime = data[3].columns[0];
         var arrVaccineGroup = data[4];
 
-        // write owid last updated time to index page
         const lastUpdated = changeTimezone(updateTime);
+        document.getElementById('last_update').innerHTML += ' <small class="text-muted">Data updated: ' + lastUpdated + '</small>';
 
         // exclude dupe locations from arrVaccinations
         const arrVacDetail = arrVaccinations.filter(function(d) { 
@@ -132,12 +132,12 @@ function getData(fltrVaccineGroup, fltrPopulation){
         function createGlobalTotal100RankChart() {
 
             // create divs, para for chart
-            document.getElementById('div_current_rank').innerHTML = '';
+            document.getElementById('div_global_rank').innerHTML = '';
             var divTitle = document.createElement("h4");
             var divDesc= document.createElement("p");
             //var divLegend = document.createElement("ul");
             var divChart = document.createElement("div");
-            divChart.id = 'div_chart';
+            divChart.id = 'div_global_rank_chart';
             var chartTitle = 'COVID-19 Vaccine Doses Administered per 100 People - Rank By Country';
             var chartDesc = 'Shows vaccine doses administered per 100 people for all ' + countryCount + ' countries currently in OWID dataset.';
             /*
@@ -154,10 +154,10 @@ function getData(fltrVaccineGroup, fltrPopulation){
             divDesc.innerHTML = chartDesc;
             //divLegend.innerHTML = chartLegend;
             //divLegend.className = 'list-inline small';
-            document.getElementById('div_current_rank').append(divTitle);
-            document.getElementById('div_current_rank').append(divDesc);
-            //document.getElementById('div_current_rank').append(divLegend);
-            document.getElementById('div_current_rank').append(divChart);
+            document.getElementById('div_global_rank').append(divTitle);
+            document.getElementById('div_global_rank').append(divDesc);
+            //document.getElementById('div_global_rank').append(divLegend);
+            document.getElementById('div_global_rank').append(divChart);
     
             // define x and y axis arrays
             var x = [];
@@ -231,7 +231,7 @@ function getData(fltrVaccineGroup, fltrPopulation){
             // create plotly data, config, chart
             var data = [trPer100];
             var config = {responsive: true}
-            Plotly.newPlot('div_chart', data, layout, config);
+            Plotly.newPlot('div_global_rank_chart', data, layout, config);
 
         }
 
@@ -327,12 +327,12 @@ function getData(fltrVaccineGroup, fltrPopulation){
             }
 
             // create divs, para for section
-            document.getElementById('div_country_rank').innerHTML = '';
+            document.getElementById('div_sub_plot_rank').innerHTML = '';
             var divTitle = document.createElement("h4");
             var divDesc= document.createElement("p");
             var divChart = document.createElement("div");
             var divButtons = document.createElement("div");
-            divChart.id = 'div_subplots';
+            divChart.id = 'div_sub_plots';
             divChart.className = 'grid';
             var chartTitle = 'COVID-19 Vaccine Doses Administered per 100 People - Rank Percentile By Country';
             var chartDesc = 'Visualizations show vaccine dose administration per 100 people as a rank percentile (blue line) for all countries in OWID dataset. Includes trendline (red dashed line).';
@@ -350,10 +350,10 @@ function getData(fltrVaccineGroup, fltrPopulation){
             divTitle.innerHTML = chartTitle;
             divDesc.innerHTML = chartDesc;
             divButtons.innerHTML = chartButtons;
-            document.getElementById('div_country_rank').append(divTitle);
-            document.getElementById('div_country_rank').append(divDesc);
-            document.getElementById('div_country_rank').append(divButtons);
-            document.getElementById('div_country_rank').append(divChart);
+            document.getElementById('div_sub_plot_rank').append(divTitle);
+            document.getElementById('div_sub_plot_rank').append(divDesc);
+            document.getElementById('div_sub_plot_rank').append(divButtons);
+            document.getElementById('div_sub_plot_rank').append(divChart);
 
             // create unique location array to loop through
             var arrRanklocations = [...new Set(arrCountryRank.map(item => item.location))];
@@ -467,7 +467,7 @@ function getData(fltrVaccineGroup, fltrPopulation){
                 }
 
                 // create location div elements
-                var div_location = document.createElement("div");
+                var div_sub_plot = document.createElement("div");
                 var div_span_location = document.createElement("span");
                 var div_span_rank = document.createElement("span");
                 var div_span_slope = document.createElement("span");
@@ -476,8 +476,8 @@ function getData(fltrVaccineGroup, fltrPopulation){
                 var div_span_population = document.createElement("span");
 
                 // create element id and classnames
-                div_location.id = 'locationDiv' + i;
-                div_location.className = 'location_div';
+                div_sub_plot.id = 'div_sub_plot_' + i;
+                div_sub_plot.className = 'div_sub_plot';
                 div_span_location.className = 'location';
                 div_span_rank.className = 'rank';
                 div_span_slope.className = 'slope';
@@ -485,28 +485,31 @@ function getData(fltrVaccineGroup, fltrPopulation){
                 div_span_total_vaccinations.className = 'total_vaccinations';
                 div_span_population.className = 'population';
 
-                // append location div to the parent div_subplots (isotope 'grid')
-                document.getElementById('div_subplots').append(div_location);
+                // append location div to the parent div_sub_plots (isotope 'grid')
+                document.getElementById('div_sub_plots').append(div_sub_plot);
 
                 // add hidden spans to location div for isotope
-                div_location.innerHTML += '<span class="location span_hide" >'+ arrRanklocations[i] +'</span>';
-                div_location.innerHTML += '<span class="rank span_hide">'+ currentRank + '</span>';
-                div_location.innerHTML += '<span class="min_date span_hide">' + xDateDaysMin + '</span>';
-                div_location.innerHTML += '<span class="slope span_hide">'+ lr.slope + '</span>';
-                div_location.innerHTML += '<span class="total_vaccinations span_hide">' + currentTotalVax + '</span>';
-                div_location.innerHTML += '<span class="population span_hide">' + locPopulation + '</span>';
+                div_sub_plot.innerHTML += '<span class="location span_hide" >'+ arrRanklocations[i] +'</span>';
+                div_sub_plot.innerHTML += '<span class="rank span_hide">'+ currentRank + '</span>';
+                div_sub_plot.innerHTML += '<span class="min_date span_hide">' + xDateDaysMin + '</span>';
+                div_sub_plot.innerHTML += '<span class="slope span_hide">'+ lr.slope + '</span>';
+                div_sub_plot.innerHTML += '<span class="total_vaccinations span_hide">' + currentTotalVax + '</span>';
+                div_sub_plot.innerHTML += '<span class="population span_hide">' + locPopulation + '</span>';
 
                 // add visible content below chart in location div
-                div_location.innerHTML += '<p class="span_show">Current Rank: ' + currentRank + '<br>Doses per 100: '+ parseFloat(currentPer100).toFixed(2) + '<br>Doses: ' + parseInt(currentTotalVax).toLocaleString() + ' <br>Start: '+ xDateMin + '<br>Pop: ' + parseInt(locPopulation).toLocaleString() + '<br>' + locVaccines + '</p>';
+                div_sub_plot.innerHTML += '<p class="span_show">Current Rank: ' + currentRank + '<br>Doses per 100: '+ parseFloat(currentPer100).toFixed(2) + '<br>Doses: ' + parseInt(currentTotalVax).toLocaleString() + ' <br>Start: '+ xDateMin + '<br>Pop: ' + parseInt(locPopulation).toLocaleString() + '<br>' + locVaccines + '</p>';
 
                 // create plotly data, config, chart
                 var data = [trRankPctile, trTrendline];
                 var config = {responsive: true}
-                Plotly.newPlot('locationDiv' + i, data, layout, config);
+                Plotly.newPlot('div_sub_plot_' + i, data, layout, config);
 
             }
             
         }
+
+
+    
 
         
         /*
@@ -610,10 +613,10 @@ function getData(fltrVaccineGroup, fltrPopulation){
         // create charts when page loads
         createGlobalTotal100RankChart();
         createAllCountryRankSubPlots();
-
+        
         // initiate isotope
         var $grid = $('.grid').isotope({
-            itemSelector: '.location_div',  
+            itemSelector: '.div_sub_plot',
             layoutMode: 'fitRows',
             getSortData: {
                 location: '.location',

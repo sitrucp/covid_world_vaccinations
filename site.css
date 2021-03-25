@@ -12,7 +12,7 @@
     margin-top: 40px;
 }
 
-.location_div {
+.div_sub_plot {
     display: inline-block;
     text-align: center;
     padding: 5px;
@@ -20,7 +20,7 @@
     width: 200px;
   }
 
-  .location_div_slim {
+  .div_sub_plot_slim {
     display: inline-block;
     text-align: center;
     padding: 5px;
