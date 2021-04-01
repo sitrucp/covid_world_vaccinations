@@ -26,11 +26,12 @@ var $grid = '';
 // define default filters
 var fltrPopulation = "";
 var fltrVaccineGroup = "";
+var fltrCountryGroup = "";
 
 // get data (with filters, if any)
-getData(fltrVaccineGroup, fltrPopulation);
+getData(fltrVaccineGroup, fltrPopulation, fltrCountryGroup);
 
-function getData(fltrVaccineGroup, fltrPopulation){ 
+function getData(fltrVaccineGroup, fltrPopulation, fltrCountryGroup){ 
     // promise data from sources
     Promise.all([
         d3.csv(file_vaccinations),
@@ -334,8 +335,8 @@ function getData(fltrVaccineGroup, fltrPopulation){
             var divButtons = document.createElement("div");
             divChart.id = 'div_sub_plots';
             divChart.className = 'grid';
-            var chartTitle = 'COVID-19 Vaccine Doses Administered per 100 People - Rank Percentile By Country';
-            var chartDesc = 'Visualizations show vaccine dose administration per 100 people as a rank percentile (blue line) for all countries in OWID dataset. Includes trendline (red dashed line).';
+            var chartTitle = 'COVID-19 Vaccine Doses Administered per 100 People - Global Rank Percentile By Country';
+            var chartDesc = 'Visualizations show vaccine dose administration per 100 people as a daily global rank percentile (blue line) for all countries in OWID dataset. Includes trendline (red dashed line).';
 
             var chartButtons = 
             '<span><strong>Sort:</strong> </span><div class="btn-group flex-wrap" role="group" aria-label="Basic example">' +
@@ -440,19 +441,22 @@ function getData(fltrVaccineGroup, fltrPopulation){
                     width: 200,
                     height: 175,
                     margin: {
-                        l: 20,
+                        l: 28,
                         r: 10,
                         b: 25,
                         t: 50
                     },
                     showlegend: false,
                     xaxis: { 
-                        //type: 'category',
+                        tickmode: 'linear',
+                        tick0: minVacDate,
+                        dtick: 30 * 24 * 60 * 60 * 1000, // milliseconds
+                        tickformat: '%b',
+                        range: [minVacDate, maxVacDate],
                         tickfont: {
                             size: 9
                         },
                         showgrid: false,
-                        range: [minVacDate, maxVacDate],
                     },
                     yaxis: { 
                         title: {
@@ -461,6 +465,8 @@ function getData(fltrVaccineGroup, fltrPopulation){
                         tickfont: {
                             size: 9
                         },
+                        tickvals: [50,100],
+                        ticktext: ['50%','100%'],
                         range: [0, 100],
                         showgrid: false
                     }

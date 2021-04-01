@@ -15,7 +15,7 @@
 .div_sub_plot {
     display: inline-block;
     text-align: center;
-    padding: 5px;
+    margin-right: 10px;
     margin-bottom: 10px; 
     width: 200px;
   }
