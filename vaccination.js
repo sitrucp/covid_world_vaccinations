@@ -24,9 +24,9 @@ const clrWhiteTransparent = 'rgba(255,255,255,0)';
 var $grid = '';
 
 // define default filters
-var fltrPopulation = "";
-var fltrVaccineGroup = "";
-var fltrCountryGroup = "";
+var fltrPopulation = '';
+var fltrVaccineGroup = '';
+var fltrCountryGroup = '';
 
 // get data (with filters, if any)
 getData(fltrVaccineGroup, fltrPopulation, fltrCountryGroup);
@@ -53,7 +53,7 @@ function getData(fltrVaccineGroup, fltrPopulation, fltrCountryGroup){
 
         // exclude dupe locations from arrVaccinations
         const arrVacDetail = arrVaccinations.filter(function(d) { 
-            return d.location != "England" && d.location != "European Union" && d.location != "Gibraltar" && d.location != "Northern Ireland" && d.location != "Scotland" && d.location != "Wales" && d.location != "World" && d.location != "Africa" && d.location != "Asia" && d.location != "Europe" && d.location != "North America" && d.location != "South America" && d.location != "Oceania";
+            return d.location != "England" && d.location != "European Union" && d.location != "Northern Ireland" && d.location != "Scotland" && d.location != "Wales" && d.location != "World" && d.location != "Africa" && d.location != "Asia" && d.location != "Europe" && d.location != "North America" && d.location != "South America" && d.location != "Oceania";
         });
 
         // create new elements in arrVacDetail
