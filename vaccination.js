@@ -23,22 +23,16 @@ const clrWhiteTransparent = 'rgba(255,255,255,0)';
 // define isotope grid
 var $grid = '';
 
-// define default filters
-var fltrPopulation = '';
-var fltrVaccineGroup = '';
-var fltrCountryGroup = '';
-
 // get data (with filters, if any)
-getData(fltrVaccineGroup, fltrPopulation, fltrCountryGroup);
+getData();
 
-function getData(fltrVaccineGroup, fltrPopulation, fltrCountryGroup){ 
+function getData(){ 
     // promise data from sources
     Promise.all([
         d3.csv(file_vaccinations),
         d3.csv(file_locations),
         d3.csv(file_population),
         d3.csv(file_update_time),
-        d3.csv(file_vaccine_group),
     ]).then(function(data) {
 
         // get data from promise
@@ -46,7 +40,6 @@ function getData(fltrVaccineGroup, fltrPopulation, fltrCountryGroup){
         var arrLocations = data[1];
         var arrPopulation = data[2];
         var updateTime = data[3].columns[0];
-        var arrVaccineGroup = data[4];
 
         const lastUpdated = changeTimezone(updateTime);
         document.getElementById('last_update').innerHTML += ' <small class="text-muted">Data updated: ' + lastUpdated + '</small>';
@@ -80,26 +73,38 @@ function getData(fltrVaccineGroup, fltrPopulation, fltrCountryGroup){
             i++;
         });
 
-        // create new elements in arrLocations
-        arrLocations.forEach(function(d) {
-            d.owid_vaccine_alt = getVaccineAlt(d.vaccines, arrVaccineGroup);
-            d.vaccine_group = getVaccineGroup(d.vaccines, arrVaccineGroup);
+        // group by location and get max date eg last_observation_date
+        var arrLastObservationDate = d3.nest()
+        .key(function(d) { 
+            return d.location; 
+        })
+        .rollup(function(v) { 
+            return {
+                last_observation_date: d3.max(v, function(d) { return d.date; }),
+            };
+        })
+        .entries(arrVacDetail)
+        .map(function(group) {
+            return {
+                location: group.key,
+                last_observation_date: group.value.last_observation_date
+            }
         });
 
         // left join arrPopulation to arrLocations
         const arrLocationPop = equijoinWithDefault(
-            arrLocations, arrPopulation, 
+            arrLastObservationDate, arrPopulation, 
             "location", "entity", 
-            ({location, vaccines, owid_vaccine_alt, vaccine_group, last_observation_date}, {population}, ) => 
-            ({location, vaccines, owid_vaccine_alt, vaccine_group, last_observation_date, population}), 
-            {population:null});
+            ({location, vaccines, last_observation_date}, {population}, ) => 
+            ({location, vaccines, last_observation_date, population}), 
+            {population: null});
 
         // left join arrLocationPop to arrVacDetail
         const arrVacDetailLoc = equijoinWithDefault(
             arrVacDetail, arrLocationPop, 
             "location", "location", 
-            ({concatLocDate, location, iso_code, date, date_sort, total_vaccinations, total_vaccinations_filled, people_vaccinated, people_fully_vaccinated, daily_vaccinations_raw, daily_vaccinations, total_vaccinations_per_hundred, total_vaccinations_per_hundred_filled, people_vaccinated_per_hundred, people_fully_vaccinated_per_hundred, daily_vaccinations_per_million, daily_vaccinations_per_hundred, daily_vaccinations_per_hundred_filled}, {vaccines, last_observation_date, owid_vaccine_alt, vaccine_group, population}, ) => 
-            ({concatLocDate, location, iso_code, date, date_sort, total_vaccinations, total_vaccinations_filled, people_vaccinated, people_fully_vaccinated, daily_vaccinations_raw, daily_vaccinations, total_vaccinations_per_hundred, total_vaccinations_per_hundred_filled, people_vaccinated_per_hundred, people_fully_vaccinated_per_hundred, daily_vaccinations_per_million, daily_vaccinations_per_hundred, daily_vaccinations_per_hundred_filled, vaccines, last_observation_date, owid_vaccine_alt, vaccine_group, population}), 
+            ({concatLocDate, location, iso_code, date, date_sort, total_vaccinations, total_vaccinations_filled, people_vaccinated, people_fully_vaccinated, daily_vaccinations_raw, daily_vaccinations, total_vaccinations_per_hundred, total_vaccinations_per_hundred_filled, people_vaccinated_per_hundred, people_fully_vaccinated_per_hundred, daily_vaccinations_per_million, daily_vaccinations_per_hundred, daily_vaccinations_per_hundred_filled}, {vaccines, last_observation_date, population}, ) => 
+            ({concatLocDate, location, iso_code, date, date_sort, total_vaccinations, total_vaccinations_filled, people_vaccinated, people_fully_vaccinated, daily_vaccinations_raw, daily_vaccinations, total_vaccinations_per_hundred, total_vaccinations_per_hundred_filled, people_vaccinated_per_hundred, people_fully_vaccinated_per_hundred, daily_vaccinations_per_million, daily_vaccinations_per_hundred, daily_vaccinations_per_hundred_filled, vaccines, last_observation_date, population}), 
             {population: null});
 
         // create new element in arrVacDetailLoc
@@ -107,27 +112,21 @@ function getData(fltrVaccineGroup, fltrPopulation, fltrCountryGroup){
             if (d.date === d.last_observation_date) {d.current_date =  'current_date'} else { d.current_date = ''};
         });
 
-        // filter arrVacDetailLoc by vaccine group
-        if (fltrVaccineGroup == '') {
-            var arrVacDetailLocGroup = arrVacDetailLoc;
-        } else {
-            var arrVacDetailLocGroup = arrVacDetailLoc.filter(function(d) { 
-                return d.vaccine_group.toLowerCase() === fltrVaccineGroup.toLowerCase() && d.population > fltrPopulation;
-            });
-        }
-
         // filter vaccinations dataset by location max date to get current records only
-        const arrVacDetailLocGroupCurrent = arrVacDetailLocGroup.filter(function(d) {
+        const arrVacDetailLocCurrent = arrVacDetailLoc.filter(function(d) {
             return d.current_date == 'current_date';
         });
 
         // order vaccinationMaxDate desc by total_vaccinations_per_hundred
-        arrVacDetailLocGroupCurrent.sort((a, b) => {
+        arrVacDetailLocCurrent.sort((a, b) => {
             return b.total_vaccinations_per_hundred_filled - a.total_vaccinations_per_hundred_filled;
         });
         
         // create country count
-        var countryCount = arrVacDetailLocGroupCurrent.length;
+        var countryCount = arrVacDetailLocCurrent.length;
+
+        console.log('arrVacDetailLocCurrent', arrVacDetailLocCurrent.length, 'arrLocations', arrLocations.length, 'arrPopulation', arrPopulation.length);
+
 
         // CREATE CHART
         function createGlobalTotal100RankChart() {
@@ -167,8 +166,8 @@ function getData(fltrVaccineGroup, fltrPopulation, fltrCountryGroup){
             var yper100Change = [];
     
             // create axes x and y arrays
-            for (var i=0; i<arrVacDetailLocGroupCurrent.length; i++) {
-                var row = arrVacDetailLocGroupCurrent[i];
+            for (var i=0; i<arrVacDetailLocCurrent.length; i++) {
+                var row = arrVacDetailLocCurrent[i];
                 x.push(row['location']);
                 yPer100.push(row['total_vaccinations_per_hundred_filled']);
                 yper100Prev.push(row['total_vaccinations_per_hundred_filled_prev']);
@@ -240,7 +239,7 @@ function getData(fltrVaccineGroup, fltrPopulation, fltrCountryGroup){
     function createAllCountryRankSubPlots() {
 
             // create arrVacDates array with unique dates to loop through 
-            var arrVacDates = [...new Set(arrVacDetailLocGroup.map(item => item.date))];
+            var arrVacDates = [...new Set(arrVacDetailLoc.map(item => item.date))];
 
             // create max and min dates
             var minVacDate = d3.min(arrVacDates.map(d=>d));
@@ -266,7 +265,7 @@ function getData(fltrVaccineGroup, fltrPopulation, fltrCountryGroup){
                 var loopDate = arrVacDates[i];
 
                 // filter arrVacDetailLoc to dates less than loop date
-                var arrVacLoopDate = arrVacDetailLocGroup.filter(function(d) { 
+                var arrVacLoopDate = arrVacDetailLoc.filter(function(d) { 
                     return d.date <= loopDate;
                 });
 
@@ -299,8 +298,8 @@ function getData(fltrVaccineGroup, fltrPopulation, fltrCountryGroup){
                 const arrVacLoopDateMaxFull = equijoinWithDefault(
                     arrVacLoopDateMax, arrVacLoopDate, 
                     "concatLocDate", "concatLocDate", 
-                    ({max_loop_date}, {concatLocDate, daily_vaccinations, daily_vaccinations_per_hundred, daily_vaccinations_per_million, daily_vaccinations_raw, date, date_sort, iso_code, last_observation_date, location, owid_vaccine_alt, people_fully_vaccinated, people_fully_vaccinated_per_hundred, people_vaccinated, people_vaccinated_per_hundred, population, total_vaccinations, total_vaccinations_filled, total_vaccinations_per_hundred, total_vaccinations_per_hundred_filled, vaccine_group, vaccines}, ) => 
-                    ({max_loop_date, concatLocDate, daily_vaccinations, daily_vaccinations_per_hundred, daily_vaccinations_per_million, daily_vaccinations_raw, date, date_sort, iso_code, last_observation_date, location, owid_vaccine_alt, people_fully_vaccinated, people_fully_vaccinated_per_hundred, people_vaccinated, people_vaccinated_per_hundred, population, total_vaccinations, total_vaccinations_filled, total_vaccinations_per_hundred, total_vaccinations_per_hundred_filled, vaccine_group, vaccines}), 
+                    ({max_loop_date}, {concatLocDate, daily_vaccinations, daily_vaccinations_per_hundred, daily_vaccinations_per_million, daily_vaccinations_raw, date, date_sort, iso_code, last_observation_date, location, people_fully_vaccinated, people_fully_vaccinated_per_hundred, people_vaccinated, people_vaccinated_per_hundred, population, total_vaccinations, total_vaccinations_filled, total_vaccinations_per_hundred, total_vaccinations_per_hundred_filled, vaccines}, ) => 
+                    ({max_loop_date, concatLocDate, daily_vaccinations, daily_vaccinations_per_hundred, daily_vaccinations_per_million, daily_vaccinations_raw, date, date_sort, iso_code, last_observation_date, location, people_fully_vaccinated, people_fully_vaccinated_per_hundred, people_vaccinated, people_vaccinated_per_hundred, population, total_vaccinations, total_vaccinations_filled, total_vaccinations_per_hundred, total_vaccinations_per_hundred_filled, vaccines}), 
                     {population: null});
                 
                 // order arrVacLoopDateMaxFull desc by total_vaccinations_per_hundred to get rank
@@ -373,11 +372,11 @@ function getData(fltrVaccineGroup, fltrPopulation, fltrCountryGroup){
                     return d.location === arrRanklocations[i];
                 });
                 
-                var currentRank = arrVacDetailLocGroupCurrent.findIndex(x => x.location === arrRanklocations[i]) + 1;
-                var currentTotalVax = arrVacDetailLocGroupCurrent.find(x => x.location === arrRanklocations[i]).total_vaccinations_filled;
-                var currentPer100 = arrVacDetailLocGroupCurrent.find(x => x.location === arrRanklocations[i]).total_vaccinations_per_hundred_filled;
-                var locPopulation = arrVacDetailLocGroupCurrent.find(x => x.location === arrRanklocations[i]).population;
-                var locVaccines = arrVacDetailLocGroupCurrent.find(x => x.location === arrRanklocations[i]).vaccines;
+                var currentRank = arrVacDetailLocCurrent.findIndex(x => x.location === arrRanklocations[i]) + 1;
+                var currentTotalVax = arrVacDetailLocCurrent.find(x => x.location === arrRanklocations[i]).total_vaccinations_filled;
+                var currentPer100 = arrVacDetailLocCurrent.find(x => x.location === arrRanklocations[i]).total_vaccinations_per_hundred_filled;
+                var locPopulation = arrVacDetailLocCurrent.find(x => x.location === arrRanklocations[i]).population;
+                var locVaccines = arrVacDetailLocCurrent.find(x => x.location === arrRanklocations[i]).vaccines;
                 
                 // create location chart  x y arrays
                 for (var j=0; j < locationData.length; j++) {
@@ -514,108 +513,6 @@ function getData(fltrVaccineGroup, fltrPopulation, fltrCountryGroup){
             
         }
 
-
-    
-
-        
-        /*
-        // CREATE VACCINE GROUP CHART
-        function createVaccineGroupChart() {
-            // create divs, para for Country chart
-            var divTitle = document.createElement("h4");
-            var divDesc= document.createElement("p");
-            var divChart = document.createElement("div");
-            var chartTitle = "Global Share by Vaccine Group";
-            var chartDesc = 'Shows count of countries by vaccine group (PMAJ, No PMAJ, Partial PMAJ). PMAJ = Pfizer, Moderna, AstraZenaca, Johnson & Johson vaccines. Non-PMAJ =  Chinese and Russian vaccines. Partial PMAJ = mix of both PMAJ and Non-PMAJ.';
-            divChart.id = 'div_vaccine_group_chart';
-            divTitle.innerHTML = chartTitle;
-            divDesc.innerHTML = chartDesc;
-            document.getElementById('div_vaccine_group').append(divTitle);
-            document.getElementById('div_vaccine_group').append(divDesc);
-            document.getElementById('div_vaccine_group').append(divChart);
-
-            // summarize location by country's last date reported <= loopDate
-            var arrVaccineGroupCounts = d3.nest()
-            .key(function(d) { return d.vaccine_group; })
-            .rollup(function(v) { return v.length; })
-            .entries(vacCurrent);
-
-            var arrVaccineGroupCounts = d3.nest()
-            .key(function(d) { return d.vaccine_group; })
-            .rollup(function(v) { return v.length; })
-            .entries(vacCurrent)
-            .map(function(group) {
-                return {
-                vaccine_group: group.key,
-                country_count: group.value
-                }
-            });
-
-            // create x and y axis data sets
-            var x = [];
-            var y = [];
-
-            // create axes x and y arrays
-            for (var i=0; i<arrVaccineGroupCounts.length; i++) {
-                var row = arrVaccineGroupCounts[i];
-                x.push(row['vaccine_group']);
-                y.push(row['country_count']);
-            }
-
-            // create chart traces
-            var trVaccineGroup = {
-                name: 'Vaccine Group',
-                hoverlabel: {
-                    namelength :-1
-                },
-                x: x,
-                y: y,
-                showgrid: false,
-                type: 'bar',
-                marker:{
-                    color: clrBlue
-                },
-            };
-
-            // create chart layout
-            var layout = {
-                title: {
-                    text:'Vaccine Group Country Counts<br>PMAJ = Pfizer, Moderna, AstraZenaca, Johnson & Johson',
-                    font: {
-                        size: 14
-                    },
-                },
-                autosize: true,
-                autoscale: false,
-                margin: {
-                    l: 30,
-                    r: 40,
-                    b: 80,
-                    t: 80,
-                    pad: 2
-                },
-                xaxis: { 
-                    tickfont: {
-                        size: 11
-                    },
-                    showgrid: false
-                },
-                yaxis: { 
-                    tickfont: {
-                        size: 11
-                    },
-                    showgrid: false
-                }
-            }
-
-            // plotly data, config, create chart
-            var data = [trVaccineGroup];
-            var config = {responsive: true}
-            Plotly.newPlot('div_vaccine_group_chart', data, layout, config);
-
-        }
-        */
-
         // create charts when page loads
         createGlobalTotal100RankChart();
         createAllCountryRankSubPlots();
@@ -653,7 +550,6 @@ function getData(fltrVaccineGroup, fltrPopulation, fltrCountryGroup){
         // isotope filter
         $('#filter-value').on('input', function() {
             var filterValue = $('#filter-value').val();
-            console.log(filterValue);
             var filterDirection = $('#filter-direction').val();
 
             $grid.isotope({ filter: function() {
@@ -774,28 +670,6 @@ function changeTimezone(d) {
     var date = new Date(d);
     var dateEST = new Date(date.setHours(date.getHours() - 5));
     return new Date(dateEST.getTime() - (dateEST.getTimezoneOffset() * 60000)).toISOString().replace('T', ' ').slice(0, -8) + ' EST';
-}
-
-// lookup to return alternate vaccine name
-function getVaccineAlt(vaccine, arrVaccineGroup) {
-    var x = arrVaccineGroup.find(x => x.owid_vaccine === vaccine);
-    if (typeof x === 'undefined'){
-        new_name = vaccine
-    } else {
-        new_name = x.owid_vaccine_alt
-    } 
-    return new_name
-}
-
-// lookup to return alternate vaccine group
-function getVaccineGroup(vaccine, arrVaccineGroup) {
-    var x = arrVaccineGroup.find(x => x.owid_vaccine === vaccine);
-    if (typeof x === 'undefined'){
-        new_name = 'unknown'
-    } else {
-        new_name = x.vaccine_group
-    } 
-    return new_name
 }
 
 // assign bar color based on current and prev per 100 values
