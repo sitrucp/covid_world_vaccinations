@@ -124,10 +124,7 @@ function getData(){
         
         // create country count
         var countryCount = arrVacDetailLocCurrent.length;
-
-        console.log('arrVacDetailLocCurrent', arrVacDetailLocCurrent.length, 'arrLocations', arrLocations.length, 'arrPopulation', arrPopulation.length);
-
-
+        
         // CREATE CHART
         function createGlobalTotal100RankChart() {
 
