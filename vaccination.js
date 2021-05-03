@@ -91,20 +91,28 @@ function getData(){
             }
         });
 
-        // left join arrPopulation to arrLocations
+        // left join arrLastObservationDate to arrPopulation
         const arrLocationPop = equijoinWithDefault(
             arrLastObservationDate, arrPopulation, 
             "location", "entity", 
-            ({location, vaccines, last_observation_date}, {population}, ) => 
-            ({location, vaccines, last_observation_date, population}), 
+            ({location, last_observation_date}, {population}, ) => 
+            ({location, last_observation_date, population}), 
             {population: null});
 
+        // left join arrLastObservationDate to arrPopulation
+        const arrLocationPopVac = equijoinWithDefault(
+            arrLocationPop, arrLocations, 
+            "location", "location", 
+            ({location, last_observation_date, population}, {vaccines}, ) => 
+            ({location, last_observation_date, population, vaccines}), 
+            {population: null});
+            
         // left join arrLocationPop to arrVacDetail
         const arrVacDetailLoc = equijoinWithDefault(
-            arrVacDetail, arrLocationPop, 
+            arrVacDetail, arrLocationPopVac, 
             "location", "location", 
-            ({concatLocDate, location, iso_code, date, date_sort, total_vaccinations, total_vaccinations_filled, people_vaccinated, people_fully_vaccinated, daily_vaccinations_raw, daily_vaccinations, total_vaccinations_per_hundred, total_vaccinations_per_hundred_filled, people_vaccinated_per_hundred, people_fully_vaccinated_per_hundred, daily_vaccinations_per_million, daily_vaccinations_per_hundred, daily_vaccinations_per_hundred_filled}, {vaccines, last_observation_date, population}, ) => 
-            ({concatLocDate, location, iso_code, date, date_sort, total_vaccinations, total_vaccinations_filled, people_vaccinated, people_fully_vaccinated, daily_vaccinations_raw, daily_vaccinations, total_vaccinations_per_hundred, total_vaccinations_per_hundred_filled, people_vaccinated_per_hundred, people_fully_vaccinated_per_hundred, daily_vaccinations_per_million, daily_vaccinations_per_hundred, daily_vaccinations_per_hundred_filled, vaccines, last_observation_date, population}), 
+            ({concatLocDate, location, iso_code, date, date_sort, total_vaccinations, total_vaccinations_filled, people_vaccinated, people_fully_vaccinated, daily_vaccinations_raw, daily_vaccinations, total_vaccinations_per_hundred, total_vaccinations_per_hundred_filled, people_vaccinated_per_hundred, people_fully_vaccinated_per_hundred, daily_vaccinations_per_million, daily_vaccinations_per_hundred, daily_vaccinations_per_hundred_filled}, {last_observation_date, population, vaccines}, ) => 
+            ({concatLocDate, location, iso_code, date, date_sort, total_vaccinations, total_vaccinations_filled, people_vaccinated, people_fully_vaccinated, daily_vaccinations_raw, daily_vaccinations, total_vaccinations_per_hundred, total_vaccinations_per_hundred_filled, people_vaccinated_per_hundred, people_fully_vaccinated_per_hundred, daily_vaccinations_per_million, daily_vaccinations_per_hundred, daily_vaccinations_per_hundred_filled, last_observation_date, population, vaccines}), 
             {population: null});
 
         // create new element in arrVacDetailLoc
@@ -318,7 +326,8 @@ function getData(){
                         total_vaccinations: parseInt(row.total_vaccinations_filled).toLocaleString(),
                         total_vaccinations_per100: parseFloat(row.total_vaccinations_per_hundred_filled).toFixed(2), 
                         rank: (parseInt(j) + 1),
-                        rank_percentile: getRankPctile((parseInt(j) + 1), vCountryCount)
+                        rank_percentile: getRankPctile((parseInt(j) + 1), vCountryCount),
+                        vaccines: row.vaccines
                     });
                 }
             }
