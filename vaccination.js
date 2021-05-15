@@ -46,7 +46,7 @@ function getData(){
 
         // exclude dupe locations from arrVaccinations
         const arrVacDetail = arrVaccinations.filter(function(d) { 
-            return d.location != "England" && d.location != "European Union" && d.location != "Northern Ireland" && d.location != "Scotland" && d.location != "Wales" && d.location != "World" && d.location != "Africa" && d.location != "Asia" && d.location != "Europe" && d.location != "North America" && d.location != "South America" && d.location != "Oceania";
+            return d.location != "England" && d.location != "European Union" && d.location != "Northern Ireland" && d.location != "Scotland" && d.location != "Wales" && d.location != "World" && d.location != "Africa" && d.location != "Asia" && d.location != "Europe" && d.location != "North America" && d.location != "South America" && d.location != "Oceania" && d.location != "High income" && d.location != "Low income" && d.location != "Lower middle income" && d.location != "Upper middle income";
         });
 
         // create new elements in arrVacDetail
