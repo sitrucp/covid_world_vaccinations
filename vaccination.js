@@ -211,11 +211,13 @@ function getData(){
                 },
                 autosize: true,
                 autoscale: false,
+                //width: 200,
+                height: 300,
                 margin: {
                     l: 40,
                     r: 40,
                     b: 120,
-                    t: 40,
+                    t: 10,
                     pad: 2
                 },
                 xaxis: { 
