@@ -1,8 +1,8 @@
 
 // get files from OWID github repository
-var file_update_time = "https://raw.githubusercontent.com/owid/COVID-19-data/master/public/data/owid-covid-data-last-updated-timestamp.txt";
-var file_vaccinations = "https://raw.githubusercontent.com/owid/COVID-19-data/master/public/data/vaccinations/vaccinations.csv";
-var file_locations = "https://raw.githubusercontent.com/owid/COVID-19-data/master/public/data/vaccinations/locations.csv";
+var file_update_time = "https://covid.ourworldindata.org/data/owid-covid-data-last-updated-timestamp.txt";
+var file_vaccinations = "https://covid.ourworldindata.org/data/vaccinations/vaccinations.csv";
+var file_locations = "https://covid.ourworldindata.org/data/vaccinations/locations.csv";
 var file_population = "https://raw.githubusercontent.com/owid/COVID-19-data/master/scripts/input/un/population_2020.csv";
 
 // to do: use stable url instead
@@ -143,7 +143,7 @@ function getData(){
             //var divLegend = document.createElement("ul");
             var divChart = document.createElement("div");
             divChart.id = 'div_global_rank_chart';
-            var chartTitle = 'COVID-19 Vaccine Doses Administered per 100 People - Rank By Country';
+            var chartTitle = 'Total Doses Per 100 People - Rank By Country';
             var chartDesc = 'Shows vaccine doses administered per 100 people for all ' + countryCount + ' countries currently in OWID dataset.';
             /*
             var chartLegend = 
@@ -342,7 +342,7 @@ function getData(){
             var divButtons = document.createElement("div");
             divChart.id = 'div_sub_plots';
             divChart.className = 'grid';
-            var chartTitle = 'COVID-19 Vaccine Doses Administered per 100 People - Global Rank Percentile By Country';
+            var chartTitle = 'Total Doses Per 100 People - Global Rank Percentile By Country';
             var chartDesc = 'Visualizations show vaccine dose administration per 100 people as a daily global rank percentile (blue line) for all countries in OWID dataset. Includes trendline (red dashed line).';
 
             var chartButtons = 
